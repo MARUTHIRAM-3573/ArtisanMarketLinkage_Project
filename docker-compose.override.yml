@@ -1,0 +1,25 @@
+version: "3.9"
+
+# Local developer overrides — automatically merged by `docker compose` on top
+# of docker-compose.yml. Adds hot-reload-friendly mounts, a debug port, and
+# verbose logging. Never used in CI or any deployed environment.
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: app/Dockerfile
+      target: builder     # stop at the builder stage so source changes don't require a full multi-stage rebuild
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      LOGGING_LEVEL_ROOT: DEBUG
+      LOGGING_LEVEL_COM_ARTISANPLATFORM: DEBUG
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    ports:
+      - "8080:8080"
+      - "5005:5005"   # remote debugger port
+    volumes:
+      - ./backend:/workspace          # live source mount for fast local iteration
+      - ~/.m2:/root/.m2               # share host Maven cache to speed up rebuilds
+      - ./storage/uploads:/app/uploads
+      - ./database/migrations:/flyway/migrations:ro

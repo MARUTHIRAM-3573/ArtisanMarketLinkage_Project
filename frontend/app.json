@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Artisan Marketplace",
+    "slug": "artisan-platform-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#ffffff"
+    },
+    "android": {
+      "package": "com.artisanplatform.mobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": ["RECORD_AUDIO", "CAMERA", "READ_EXTERNAL_STORAGE"]
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.artisanplatform.mobile"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      }
+    }
+  }
+}

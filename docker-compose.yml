@@ -1,0 +1,74 @@
+version: "3.9"
+
+# Local development stack for the Artisan Digital Commerce Platform.
+# Per the approved architecture (ADR-1, ADR-3, ADR-4, ADR-10), this stack is
+# intentionally minimal: ONE backend deployable + PostgreSQL. No RabbitMQ,
+# Redis, or Vault are part of the approved MVP architecture — see
+# docs/architecture/07_QUEUE_AND_CACHE_DESIGN.md and
+# docs/architecture/08_SECURITY_AND_VAULT.md for the reasoning.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: artisan-postgres
+    environment:
+      POSTGRES_DB: artisan_marketplace
+      POSTGRES_USER: ${DB_USERNAME:-artisan}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-artisan_dev_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-artisan} -d artisan_marketplace"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - artisan-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: app/Dockerfile
+    container_name: artisan-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: artisan_marketplace
+      DB_USERNAME: ${DB_USERNAME:-artisan}
+      DB_PASSWORD: ${DB_PASSWORD:-artisan_dev_password}
+      JWT_SECRET: ${JWT_SECRET:-dev-only-change-me-dev-only-change-me}
+      JWT_ACCESS_TOKEN_TTL_MINUTES: ${JWT_ACCESS_TOKEN_TTL_MINUTES:-30}
+      JWT_REFRESH_TOKEN_TTL_DAYS: ${JWT_REFRESH_TOKEN_TTL_DAYS:-14}
+      MEDIA_STORAGE_PROVIDER: LOCAL
+      MEDIA_STORAGE_LOCAL_PATH: /app/uploads
+      AI_PROVIDER_API_KEY: ${AI_PROVIDER_API_KEY:-dev-placeholder}
+      PAYMENT_GATEWAY_MODE: MOCK
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./storage/uploads:/app/uploads
+      - ./database/migrations:/flyway/migrations:ro
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - artisan-net
+
+networks:
+  artisan-net:
+    name: artisan-net
+    driver: bridge
+
+volumes:
+  pg_data:
+    name: artisan-pg-data

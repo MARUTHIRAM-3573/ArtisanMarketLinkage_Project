@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    show-sql: false
+
+logging:
+  level:
+    root: INFO
+    com.artisanplatform: DEBUG
+
+# Deployment provider is deliberately left open (docs/architecture/02_ARCHITECTURE_OVERVIEW.md §4) —
+# staging-specific datasource/secret values are injected as environment variables
+# by whichever CI/CD deploy step targets this profile (see .github/workflows/cd.yml).

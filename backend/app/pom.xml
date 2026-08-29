@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  THE single runnable Spring Boot application. Depends on every domain module
+  plus common — this is the one and only deployable artifact for the whole
+  backend (modular monolith, ADR-1). No other module in this reactor produces
+  an executable JAR or has its own main class.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.artisanplatform</groupId>
+    <artifactId>artisan-platform-backend</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>app</artifactId>
+  <packaging>jar</packaging>
+  <name>app</name>
+  <description>The Artisan Digital Commerce Platform's single Spring Boot deployable. Aggregates all 11 domain modules.</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>auth</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>seller</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>catalog</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>media</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>inventory</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>ai</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>pricing</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>market</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>b2b</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>commerce</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>payment</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-database-postgresql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.artisanplatform</groupId>
+      <artifactId>test-support</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>artisan-platform</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>com.artisanplatform.app.ArtisanPlatformApplication</mainClass>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

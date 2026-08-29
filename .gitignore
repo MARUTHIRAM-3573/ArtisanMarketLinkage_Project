@@ -1,0 +1,52 @@
+# ---- Java / Maven ----
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+*.war
+*.ear
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+hs_err_pid*
+
+# ---- Node / npm / Expo ----
+node_modules/
+frontend/dist/
+frontend/.expo/
+frontend/.expo-shared/
+frontend/web-build/
+frontend/npm-debug.*
+frontend/yarn-error.*
+*.tsbuildinfo
+.eas/
+
+# ---- IDE ----
+# IntelliJ
+.idea/
+*.iml
+*.iws
+out/
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# ---- Environment / secrets ----
+.env
+.env.*
+!.env.example
+
+# ---- Docker ----
+docker-compose.override.local.yml
+
+# ---- Runtime data (never commit uploaded user files — source §32.8) ----
+storage/uploads/**
+!storage/uploads/.gitkeep
+
+# ---- OS ----
+.DS_Store
+Thumbs.db

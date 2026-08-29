@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: artisan-platform
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:artisan_marketplace}
+    username: ${DB_USERNAME:artisan}
+    password: ${DB_PASSWORD:artisan_dev_password}
+  jpa:
+    hibernate:
+      ddl-auto: validate   # schema is owned by Flyway migrations, never by Hibernate auto-DDL (principle #33.9)
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: public
+  flyway:
+    enabled: true
+    locations: filesystem:/flyway/migrations   # see backend/app/Dockerfile — root database/migrations/ is copied here at image build time
+    baseline-on-migrate: true
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  security:
+    jwt:
+      secret: ${JWT_SECRET:dev-only-change-me-dev-only-change-me}
+      access-token-ttl-minutes: ${JWT_ACCESS_TOKEN_TTL_MINUTES:30}
+      refresh-token-ttl-days: ${JWT_REFRESH_TOKEN_TTL_DAYS:14}
+  media:
+    storage-provider: ${MEDIA_STORAGE_PROVIDER:LOCAL}
+    local-path: ${MEDIA_STORAGE_LOCAL_PATH:/app/uploads}
+    max-upload-size-mb: ${MEDIA_MAX_UPLOAD_SIZE_MB:25}
+  ai:
+    provider-api-key: ${AI_PROVIDER_API_KEY:}
+    provider-base-url: ${AI_PROVIDER_BASE_URL:}
+  payment:
+    gateway-mode: ${PAYMENT_GATEWAY_MODE:MOCK}
+    gateway-api-key: ${PAYMENT_GATEWAY_API_KEY:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging:
+  pattern:
+    console: '{"timestamp":"%d{ISO8601}","level":"%p","correlationId":"%X{correlationId}","logger":"%logger{36}","message":"%msg"}%n'
+  level:
+    root: INFO
+    com.artisanplatform: INFO
