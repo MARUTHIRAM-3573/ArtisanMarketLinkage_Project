@@ -33,6 +33,7 @@ out/
 .project
 .classpath
 .settings/
+.factorypath
 bin/
 
 # ---- Environment / secrets ----
@@ -47,6 +48,8 @@ docker-compose.override.local.yml
 storage/uploads/**
 !storage/uploads/.gitkeep
 
-# ---- OS ----
+# ---- OS / Archives ----
 .DS_Store
 Thumbs.db
+*.zip
+*.tar.gz

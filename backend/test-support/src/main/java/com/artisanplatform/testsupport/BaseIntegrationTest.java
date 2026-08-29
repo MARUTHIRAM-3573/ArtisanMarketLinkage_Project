@@ -17,7 +17,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * module-specific {@code @Import}/{@code @ActiveProfiles} they need.
  */
 @Testcontainers
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class BaseIntegrationTest {
 
     @DynamicPropertySource

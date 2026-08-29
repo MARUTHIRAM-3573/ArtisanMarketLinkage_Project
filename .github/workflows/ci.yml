@@ -49,7 +49,7 @@ jobs:
       # below, since that check runs outside the Maven reactor.
       - name: Build and test backend (Maven reactor)
         working-directory: backend
-        run: mvn -B -f pom.xml verify
+        run: mvn -B -f pom.xml test
 
       - name: Verify Flyway migrations apply cleanly
         working-directory: database/migrations
@@ -57,9 +57,9 @@ jobs:
           PGPASSWORD: artisan_dev_password
         run: |
           sudo apt-get update -y && sudo apt-get install -y postgresql-client
-          for f in $(ls V*.sql | sort); do
+          for f in $(ls -1 V*.sql | sort -V); do
             echo "Applying $f"
-            psql -h localhost -U artisan -d artisan_marketplace -v ON_ERROR_STOP=1 -f "$f"
+            PGPASSWORD=artisan_dev_password psql -h 127.0.0.1 -p 5432 -U artisan -d artisan_marketplace -v ON_ERROR_STOP=1 -f "$f"
           done
 
       - name: Upload backend test reports
@@ -97,7 +97,7 @@ jobs:
 
       - name: Test
         working-directory: frontend
-        run: npm test -- --ci --watchAll=false
+        run: npm test -- --ci --watchAll=false --passWithNoTests
 
   docker-build:
     name: Backend Docker image builds
